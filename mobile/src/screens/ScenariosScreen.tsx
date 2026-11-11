@@ -1,9 +1,9 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, Pressable, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import { Screen, Card, Btn, Icon, LabeledInput, Stepper } from '../components/ui';
 import { colors, spacing, radius, fontSizes } from '../theme';
 import { api, toScenarioRecord } from '../lib/api';
-import type { ScenarioRecord } from '../types';
+import type { ScenarioRecord, FarmConfig } from '../types';
 
 type Tab = 'browse' | 'mine' | 'create';
 
@@ -15,12 +15,13 @@ const CATEGORIES = [
 ];
 const VARIABLES = ['Irrigation volume','Irrigation interval','Fertiliser rate','Planting date','Crop variety','Pesticide use','Harvest date','Labour budget'];
 
-export default function ScenariosScreen({ onRun }: { onRun: (s: ScenarioRecord) => void }) {
+export default function ScenariosScreen({ onRun, farm }: { onRun: (s: ScenarioRecord) => void; farm?: FarmConfig }) {
   const [tab, setTab] = useState<Tab>('browse');
   const [loading, setLoading] = useState(true);
   const [presets, setPresets] = useState<ScenarioRecord[]>([]);
   const [mine, setMine] = useState<ScenarioRecord[]>([]);
   const [msg, setMsg] = useState('');
+  
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -49,11 +50,20 @@ export default function ScenariosScreen({ onRun }: { onRun: (s: ScenarioRecord) 
     try {
       const payload = {
         name, description, category, difficulty, duration,
+        farmId: farm?.id ?? '',
         adjustableVariables: variables,
         learningObjectives: ['Evaluate how management decisions affect crop health.'],
         startingConditions: { soilMoisture: 55, temperature: 24, rainfall: 8, budget: 25000, pestPressure: 5 },
-        participatingFields: [],
-        crops: [],
+        participatingFields: farm?.fields.map(f => f.id) ?? [],
+        crops: farm?.fields.map(f => ({ fieldId: f.id, crop: f.crop })) ?? [],
+        fields: farm?.fields.map(f => ({
+          id: f.id, name: f.name, size: f.size, soil: f.soil, crop: f.crop,
+          irrigation: f.irrigation, x: f.x, y: f.y, width: f.width, height: f.height,
+        })) ?? [],
+        waterSources: farm?.waterSources.map(w => ({ id: w.id, type: w.type, x: w.x, y: w.y })) ?? [],
+        weather: farm?.weather ?? 'clear',
+        temperature: farm?.temperature ?? 24,
+        humidity: farm?.humidity ?? 62,
       };
       const created = await api.createScenario(payload);
       setMine(list => [toScenarioRecord(created), ...list]);

@@ -1,4 +1,4 @@
-﻿import { Allow, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
+import { Allow, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
 
 export class DemoRunDto {
   @Allow() irrigationMm?: number;

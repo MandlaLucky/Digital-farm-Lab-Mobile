@@ -1,4 +1,4 @@
-﻿import {Entity,PrimaryGeneratedColumn as PG,Column as C,ManyToOne as M,JoinColumn as J,CreateDateColumn as D} from 'typeorm';
+import {Entity,PrimaryGeneratedColumn as PG,Column as C,ManyToOne as M,JoinColumn as J,CreateDateColumn as D} from 'typeorm';
 const num = { to:(v:any)=>v, from:(v:any)=>Number(v) };
 
 @Entity('users') export class User { @PG('uuid') id:string; @C({name:'display_name',length:120}) displayName:string; @C({length:20}) role:string; @D({name:'created_at',type:'timestamptz'}) createdAt:Date; }

@@ -1,4 +1,4 @@
-﻿export const colors = {
+export const colors = {
   bg: '#07100e', panel: '#0b1714', panel2: '#0e1d19', panel3: '#11231e',
   line: 'rgba(175,211,198,0.13)', lineStrong: 'rgba(175,211,198,0.22)',
   text: '#d9e6e2', muted: '#718c83', faint: '#425c54',

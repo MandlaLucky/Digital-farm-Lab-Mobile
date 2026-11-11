@@ -1,4 +1,4 @@
-﻿import { View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { colors, spacing, fontSizes } from '../theme';
 
 export default function PlaceholderScreen({ title, subtitle }: { title: string; subtitle?: string }) {

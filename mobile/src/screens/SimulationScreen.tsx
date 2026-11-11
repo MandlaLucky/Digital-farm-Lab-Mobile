@@ -1,9 +1,11 @@
-﻿import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { View, Text, Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { Screen, Card, Btn, Icon } from '../components/ui';
 import { colors, spacing, radius, fontSizes } from '../theme';
 import { api } from '../lib/api';
 import type { FarmConfig, ScenarioRecord, RunRecord } from '../types';
+import CropPlants from '../components/CropPlants';
+import EngineModal from '../components/EngineModal';
 
 const SOIL_COLORS: Record<string,string> = { sandy:'#665d36', clay:'#684436', loamy:'#345e35', silt:'#596148' };
 type Status = 'idle' | 'running' | 'paused' | 'complete';
@@ -24,6 +26,7 @@ export default function SimulationScreen({ farm, scenario, onFinish }: {
   const [nitrogen, setNitrogen] = useState(118);
   const [targetMoisture, setTargetMoisture] = useState(62);
   const [finishing, setFinishing] = useState(false);
+  const [engineOpen, setEngineOpen] = useState(false);
   const [msg, setMsg] = useState('');
 
   const samplesRef = useRef<{ day:number; moisture:number; growth:number; water:number }[]>([]);
@@ -43,6 +46,7 @@ export default function SimulationScreen({ farm, scenario, onFinish }: {
   }, [status, speed]);
 
   const startingMoisture = scenario?.startingConditions.soilMoisture ?? 37;
+  const displayFields: FarmConfig['fields'] = farm.fields;
   const startingTemp = scenario?.startingConditions.temperature ?? farm.temperature;
   const moisture = Math.round(Math.min(92, startingMoisture + progress * 0.18 + Math.sin(progress/5) * 5));
   const temperature = Number((startingTemp + Math.sin(progress/13) * (farm.weather==='hot'?6.2:4.1)).toFixed(1));
@@ -135,13 +139,19 @@ export default function SimulationScreen({ farm, scenario, onFinish }: {
         <Text style={s.hint}>Day {Math.max(1, Math.ceil(progress * ((scenario?.duration ?? 120)/100)))} of {scenario?.duration ?? 120} · {stage}</Text>
       </View>
 
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginBottom: spacing.sm }}>
+        <Btn onPress={() => setEngineOpen(true)}>Run Engine</Btn>
+      </View>
       {!!msg && <Text style={{ color: colors.amber, fontSize: fontSizes.xs, marginBottom: spacing.sm }}>{msg}</Text>}
 
       {/* Canvas */}
       <View style={[s.canvas, { width: canvasW, height: canvasH }]}>
-        {farm.fields.map(f => (
+        {displayFields.map(f => (
           <View key={f.id} style={[s.field, { left:`${f.x}%`, top:`${f.y}%`, width:`${f.width}%`, height:`${f.height}%`, backgroundColor: SOIL_COLORS[f.soil] || '#345e35' }]}>
+            <CropPlants crop={f.crop} />
+            <CropPlants crop={f.crop} />
             <Text style={s.fName}>{f.name}</Text>
+            <Text style={s.fMeta}>{f.soil} · {f.crop}</Text>
             <Text style={s.fMoisture}>{Math.max(25, Math.min(88, moisture))}%</Text>
           </View>
         ))}
@@ -200,6 +210,7 @@ export default function SimulationScreen({ farm, scenario, onFinish }: {
           </Text>
         </Btn>
       </View>
+      {engineOpen && <EngineModal farmName={farm.name || 'Unnamed farm'} scenarioName={scenario?.name} onClose={() => setEngineOpen(false)} />}
     </Screen>
   );
 }

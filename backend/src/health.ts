@@ -1,4 +1,4 @@
-﻿import { Controller, Get } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { Public } from './auth';
 @Controller() export class HealthController {
   @Public() @Get('actuator/health') health(){ return { status:'UP' }; }

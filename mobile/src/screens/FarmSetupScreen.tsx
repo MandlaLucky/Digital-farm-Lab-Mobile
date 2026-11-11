@@ -1,4 +1,4 @@
-﻿import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Screen, Card, Btn, Icon, LabeledInput, Stepper } from '../components/ui';
 import { colors, spacing, radius, fontSizes } from '../theme';
 import type { FarmConfig, PersistedFarm, WaterSourceType } from '../types';

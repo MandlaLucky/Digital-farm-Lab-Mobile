@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, Pressable, ScrollView, ActivityIndicator, StatusBar } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts, DMSans_400Regular, DMSans_500Medium, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
@@ -12,6 +12,7 @@ import ResultsScreen from './src/screens/ResultsScreen';
 import TrainerScreen from './src/screens/TrainerScreen';
 import { colors, fontSizes, spacing } from './src/theme';
 import { emptyFarm, type FarmConfig, type PersistedFarm, type ScenarioRecord, type RunRecord } from './src/types';
+import type { FarmField } from './src/types';
 import { api, toFarm, toScenarioRecord } from './src/lib/api';
 
 type Section = 'setup' | 'builder' | 'scenarios' | 'simulation' | 'results' | 'trainer';
@@ -121,7 +122,7 @@ export default function App() {
             <FarmBuilderScreen farm={farm} onChange={patch} onSave={saveFarm} onLoad={loadFarm} farms={savedFarms} onSimulate={simulateCurrent} />
           )}
           {section === 'scenarios' && (
-            <ScenariosScreen onRun={runScenario} />
+            <ScenariosScreen onRun={runScenario} farm={farm} />
           )}
           {section === 'simulation' && (
             <SimulationScreen farm={farm} scenario={activeScenario ?? undefined} onFinish={finishRun} />

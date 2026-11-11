@@ -1,4 +1,4 @@
-﻿import { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Pressable, Text, TextInput, View, ScrollView, StyleSheet, KeyboardTypeOptions } from 'react-native';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { colors, spacing, radius, fontSizes } from '../theme';

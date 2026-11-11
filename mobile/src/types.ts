@@ -1,4 +1,4 @@
-﻿export type SoilType = 'sandy' | 'clay' | 'loamy' | 'silt';
+export type SoilType = 'sandy' | 'clay' | 'loamy' | 'silt';
 export type CropType = 'maize' | 'wheat' | 'soybean' | 'sunflower' | 'vegetables' | 'none';
 export type WaterSourceType = 'dam' | 'borehole' | 'river' | 'reservoir';
 export type IrrigationType = 'drip' | 'sprinkler' | 'flood' | 'none';
@@ -24,6 +24,11 @@ export type ScenarioRecord = {
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   learningObjectives: string[];
   source: 'preset' | 'mine';
+  fields?: FarmField[];
+  waterSources?: WaterSource[];
+  weather?: WeatherType;
+  temperature?: number;
+  humidity?: number;
 };
 export type EngineOutput = { yieldTha: number; waterUseM3Ha: number; costPerHa: number; grossMarginPerHa: number; disclaimer: string };
 export type RunRecord = {

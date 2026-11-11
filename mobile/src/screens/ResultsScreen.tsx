@@ -1,9 +1,10 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, Pressable, ActivityIndicator, TextInput, Alert, StyleSheet } from 'react-native';
 import Svg, { Polyline, Polygon, Path, Line } from 'react-native-svg';
 import { Screen, Card, Btn, Icon } from '../components/ui';
 import { colors, spacing, radius, fontSizes } from '../theme';
 import { api } from '../lib/api';
+import SensorPanel from '../components/SensorPanel';
 import type { RunRecord, EngineOutput } from '../types';
 
 type Exercise = { id: string; moduleCode: string; title: string; prompt: string; passScore: number };
@@ -73,6 +74,13 @@ export default function ResultsScreen({ run, runs, onSelect }: {
             { label: 'GROSS MARGIN',value: 'R' + eng.grossMarginPerHa.toFixed(0), unit: '/ha', sub: `baseline R${base.grossMarginPerHa.toFixed(0)}` },
           ]} />
           <Text style={s.disclaimer}>{eng.disclaimer}</Text>
+        </Card>
+      )}
+
+      {/* Sensor readings */}
+      {run.details?.fields?.[0]?.id && (
+        <Card title="SENSOR READINGS" subtitle="90 days of synthetic field data">
+          <SensorPanel fieldId={run.details.fields[0].id} />
         </Card>
       )}
 

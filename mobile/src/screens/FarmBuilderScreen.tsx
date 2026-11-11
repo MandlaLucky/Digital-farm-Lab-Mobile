@@ -1,8 +1,9 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { View, Text, Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
 import { Screen, Card, Btn, Icon, LabeledInput, Stepper } from '../components/ui';
 import { colors, spacing, radius, fontSizes } from '../theme';
+import CropPlants from '../components/CropPlants';
 import type { FarmConfig, FarmField, PersistedFarm, SoilType, CropType, IrrigationType, WaterSource, WaterSourceType } from '../types';
 
 const SOILS: SoilType[] = ['sandy','clay','loamy','silt'];
@@ -88,6 +89,8 @@ export default function FarmBuilderScreen({ farm, onChange, onSave, onLoad, farm
           return (
             <Pressable key={f.id} onPress={() => setSelection({ type:'field', id:f.id })}
               style={[s.field, { left:`${f.x}%`, top:`${f.y}%`, width:`${f.width}%`, height:`${f.height}%`, backgroundColor: SOIL_COLORS[f.soil] }, active && s.fieldActive]}>
+              <CropPlants crop={f.crop} />
+              <CropPlants crop={f.crop} />
               <Text style={s.fName} numberOfLines={1}>{f.name}</Text>
               <Text style={s.fMeta}>{f.size} ha</Text>
             </Pressable>

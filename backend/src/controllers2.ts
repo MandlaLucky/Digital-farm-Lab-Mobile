@@ -1,4 +1,4 @@
-﻿import { Controller, Get, Post, Param, Body, HttpCode, NotFoundException, ForbiddenException, ConflictException } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, HttpCode, NotFoundException, ForbiddenException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Exercise, Submission, ScenarioRun, SensorReading, Field } from './entities';

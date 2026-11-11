@@ -1,4 +1,4 @@
-﻿import { Controller, Get, Post, Put, Delete, Param, Body, Query, HttpCode, NotFoundException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query, HttpCode, NotFoundException, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull, Not } from 'typeorm';
 import { Farm, Field, Scenario, ScenarioRun, SensorReading, Exercise, Submission } from './entities';
@@ -20,7 +20,19 @@ export class WorkspaceController {
 
   @Get('farms') async listFarms(@CurrentUser() u:any){
     const list = await this.farms.find({ where:{ ownerId:u.sub }, order:{ name:'ASC' } });
-    return list.map(f => ({ ...(f.metadata||{}), id:f.id, name:f.name, location:f.province, totalSize:f.totalHa }));
+    const out:any[] = [];
+    for (const f of list) {
+      const fs = await this.fields.find({ where: { farmId: f.id } });
+      const fields = fs.map((x:any, i:number) => ({
+        id: x.id, name: x.name, size: Number(x.areaHa),
+        soil: String(x.soilType || 'loamy').toLowerCase(),
+        crop: String(x.cropCode || 'NONE').toLowerCase(),
+        irrigation: 'none',
+        x: 8 + (i % 3) * 28, y: 10 + Math.floor(i / 3) * 39, width: 24, height: 30,
+      }));
+      out.push({ ...(f.metadata||{}), id:f.id, name:f.name, location:f.province, totalSize:f.totalHa, fields });
+    }
+    return out;
   }
   @Post('farms') @HttpCode(201) async createFarm(@Body() b:any, @CurrentUser() u:any){
     const f = await this.farms.save(this.farms.create({ ownerId:u.sub, name:String(b?.name||'Unnamed farm'), province:String(b?.location||'Unknown'), totalHa:Number(b?.totalSize||40), metadata:b, isDemo:false }));
@@ -66,7 +78,15 @@ export class WorkspaceController {
   @Public() @Get('demo-farm') async demoFarm(){
     const f = await this.farms.findOne({ where:{ isDemo:true } });
     if (!f) throw new NotFoundException('No demo farm');
-    return { ...(f.metadata||{}), id:f.id, name:f.name, location:f.province, totalSize:f.totalHa };
+    const fs = await this.fields.find({ where: { farmId: f.id } });
+    const fields = fs.map((x:any, i:number) => ({
+      id: x.id, name: x.name, size: Number(x.areaHa),
+      soil: String(x.soilType || 'loamy').toLowerCase(),
+      crop: String(x.cropCode || 'NONE').toLowerCase(),
+      irrigation: 'none',
+      x: 8 + (i % 3) * 28, y: 10 + Math.floor(i / 3) * 39, width: 24, height: 30,
+    }));
+    return { ...(f.metadata||{}), id:f.id, name:f.name, location:f.province, totalSize:f.totalHa, fields };
   }
 }
 

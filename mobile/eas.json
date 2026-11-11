@@ -1,0 +1,14 @@
+{
+  "build": {
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://digital-farm-backend-bez7.onrender.com",
+        "EXPO_PUBLIC_SPRING_DEV_TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMTExMTExMS0xMTExLTExMTEtMTExMS0xMTExMTExMTExMTEiLCJyb2xlcyI6WyJMRUFSTkVSIiwiVFJBSU5FUiJdLCJpYXQiOjE3OTM5NDU5NjMsImV4cCI6MTgyNTQ4MTk2M30.8c8bKebgyF5GmKqp6lJCE7ME8etFrgHzmQUY31Wd8Sg"
+      }
+    }
+  }
+}

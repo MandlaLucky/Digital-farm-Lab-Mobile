@@ -1,4 +1,4 @@
-﻿import { Controller, Get, Put, Delete, Param, Body, HttpCode, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Put, Delete, Param, Body, HttpCode, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Scenario, Submission, Exercise, SensorReading, Field } from './entities';
@@ -50,10 +50,7 @@ export class TrainerExtraController {
   }
   @Roles('TRAINER', 'ADMIN') @Get('submissions/:id')
   async detail(@Param('id') id: string) {
-    const s = await this.subs.findOne({ where: { id } });
-    if (!s) throw new NotFoundException('Submission not found');
-    const ex = await this.exercises.findOne({ where: { id: s.exerciseId } });
-    return { submissionId: s.id, exerciseId: s.exerciseId, runId: s.runId, userId: s.userId, displayName: null, score: s.score, passed: s.score >= (ex?.passScore || 60), passScore: ex?.passScore || 60, createdAt: s.createdAt, reflection: s.reflection, runParams: {}, results: {}, baseline: {}, breakdown: [], rubricDriftDetected: false };
+    return this.report.submissionDetail(id);
   }
 }
 

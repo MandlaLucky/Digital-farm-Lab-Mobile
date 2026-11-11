@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Modal, View, Text, Pressable, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
 import { Btn } from './ui';
 import { colors, spacing, radius, fontSizes } from '../theme';

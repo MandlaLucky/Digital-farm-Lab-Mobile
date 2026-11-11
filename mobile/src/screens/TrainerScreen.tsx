@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, Pressable, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
 import { Screen, Card, Icon } from '../components/ui';
 import { colors, spacing, radius, fontSizes } from '../theme';
