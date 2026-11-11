@@ -1,0 +1,44 @@
+﻿services:
+  db:
+    image: postgres:16-alpine
+    container_name: farmlab-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "123456"
+      POSTGRES_DB: digitalfarm_DB
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./backend/db/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d digitalfarm_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./backend
+    container_name: farmlab-node-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: "8081"
+      DATABASE_URL: postgres://postgres:123456@db:5432/digitalfarm_DB
+      JWT_SECRET: dev-only-do-not-deploy-please-change-this-secret-2026
+      CORS_ALLOWED_ORIGINS: "http://localhost:3000,http://127.0.0.1:3000,http://10.2.40.192:3000"
+    ports:
+      - "8082:8081"
+
+  farmlab-pwa:
+    build: ./mobile
+    container_name: farmlab-pwa
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  db-data:
